@@ -54,7 +54,7 @@ const PergutarAoJarvis=async(Perguta) =>{
           toggleMode();     
     }
     else{
-        const apiKey = "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";
+        const apiKey = process.env.OPENAI_APIKEY;
         let url = "https://api.openai.com/v1/chat/completions";
         let header = {
             "Content-Type": "application/json",
