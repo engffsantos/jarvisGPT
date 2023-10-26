@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gráfico de Áudio</title>
+  <style>
+    /* Estilos CSS para a área do gráfico de áudio */
+    #audio-graph {
+      width: 100%;
+      height: 200px;
+      background-color: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+  <div id="audio-graph"></div>
+
+  <script>
+    // JavaScript para criar o gráfico de áudio usando o Web Audio API
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const analyser = audioContext.createAnalyser();
+    const audioElement = new Audio('assets\music\musica.mp3');
+    const audioSource = audioContext.createMediaElementSource(audioElement);
+
+    audioSource.connect(analyser);
+    analyser.connect(audioContext.destination);
+
+    analyser.fftSize = 256;
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+
+    const canvas = document.getElementById('audio-graph');
+    const canvasContext = canvas.getContext('2d');
+
+    audioElement.play();
+
+    function draw() {
+      analyser.getByteFrequencyData(dataArray);
+      canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+
+      const barWidth = (canvas.width / bufferLength) * 2;
+      let x = 0;
+
+      for (let i = 0; i < bufferLength; i++) {
+        const barHeight = dataArray[i] / 2;
+        canvasContext.fillStyle = `rgb(${barHeight + 100},50,50)`;
+        canvasContext.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+        x += barWidth + 1;
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+  </script>
+</body>
+</html>
