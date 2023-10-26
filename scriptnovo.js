@@ -1,5 +1,6 @@
 const elementoResultado = document.getElementById("resultado");
-  
+const apiKey = process.env.OPENAI_APIKEY;
+
 const mensg = [{
     "role": "system",
     "content": "Você é um assistente de bate-papo" ,
@@ -54,7 +55,7 @@ const PergutarAoJarvis=async(Perguta) =>{
           toggleMode();     
     }
     else{
-        const apiKey = process.env.OPENAI_APIKEY;
+        
         let url = "https://api.openai.com/v1/chat/completions";
         let header = {
             "Content-Type": "application/json",
