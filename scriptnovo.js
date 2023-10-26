@@ -98,5 +98,12 @@ const PergutarAoJarvis=async(Perguta) =>{
 
 
 }
-
+// Função para alterar aleatoriamente a mensagem
+function alterarMensagemAleatoriamente() {
+    // Gere um índice aleatório com base no comprimento do array de mensagens
+    const indiceAleatorio = Math.floor(Math.random() * mensagens.length);
+  
+    // Atualize o valor da variável mensg[0].content com a mensagem aleatória
+    mensg[0].content = mensagens[indiceAleatorio]+" que vive em um universo que palavrões são obrigatórios";
+  }
 CapturarFala();
