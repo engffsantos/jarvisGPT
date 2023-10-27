@@ -1,109 +1,143 @@
-const elementoResultado = document.getElementById("resultado");
-const apiKey = process.env.OPENAI_APIKEY;
 
-const mensg = [{
-    "role": "system",
-    "content": "Você é um assistente de bate-papo" ,
-    }];
-//aqui vamos capturar a fala do usuario
-const CapturarFala = ()=> {
-    let botao = document.querySelector('#start');
-    let input = document.getElementById('result');
-    
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;700&display=swap');
 
-    //Aqui vamos criar um objeto de reconhecimento de fala
-    var recognition = new webkitSpeechRecognition();
-    recognition.lang = window.navigator.language;
-    recognition.interimResults = true;
-    
-    
-    input.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter') {
-            // Verifique se a tecla pressionada é "Enter" (código-chave "Enter")
-            event.preventDefault(); // Impedir o comportamento padrão de adicionar uma nova linha   
-            PergutarAoJarvis(input.value);
-            input.value="";
-            
-        }
-        });
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    
-    botao.addEventListener('mousedown',()=>{
-        console.log("Ouvindo!!")
-        recognition.start();
-    });
-    botao.addEventListener('mouseup',()=>{
-        console.log("não estou ouvindo! ")
-        recognition.stop();
-        PergutarAoJarvis(input.value)
-    });
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: calc(100% - 90px);
+    margin-left: 90px;
+}
+.robo   {
+    width: 160px;
+    height: 183px;
+    flex-shrink: 0;
+    animation: changeHue 10s linear infinite;
+}
 
-    recognition.addEventListener('result',(e)=>{
-        const result = e.results[e.results.length - 1][0].transcript;
-        input.value = result;
-        console.log(result)
-});
+h1{
+    color: #272727;
+    font-family: 'Inter', sans-serif;
+    font-size: 72px;
+    ;
 
 }
-const PergutarAoJarvis=async(Perguta) =>{
-    alterarMensagemAleatoriamente();
-    if (Perguta === null || Perguta === undefined || Perguta === ""){
-        alert("Texto Inválido!");
-    }
-    else if(Perguta.toLowerCase().indexOf("alterar tema") !== -1){
-          // Adicione o evento de clique no botão de alternância
-          toggleMode();     
-    }
-    else{
-        
-        let url = "https://api.openai.com/v1/chat/completions";
-        let header = {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${apiKey}`,
-        }
 
-        mensg.push({
-            "role": "user",
-            "content": Perguta,
-        })
-
-        let body ={
-            model: "ft:gpt-3.5-turbo-0613:zeros-e-um::8DDHyrh4", // O modelo a ser usado
-            messages: mensg,
-            "temperature": 1
-        }
-        let options ={
-            method: "POST",
-            headers: header,
-                body: JSON.stringify(body),
-                }
-
-        fetch(url, options)
-        .then((response) => {return response.json();})
-        .then((data)=>{elementoResultado.textContent = data.choices[0].message.content;
-        const fala = new SpeechSynthesisUtterance(data.choices[0].message.content);
-
-        mensg.push({
-            "role": "assistant",
-            "content": data.choices[0].message.content,
-        })
-
+.input{
+    border: none;
+    border-bottom: 1px solid black;
+    width: 500px;
+    padding-top: 20px;
+    background-color: transparent;
     
-        fala.pitch = 2;
-        fala.rate = 1.8;
-        window.speechSynthesis.speak(fala);
-        })
-        //console.log(data.choices[0].message.content)
-    }
-
-
+    
 }
-// Função para alterar aleatoriamente a mensagem
-function alterarMensagemAleatoriamente() {
-    // Gere um índice aleatório com base no comprimento do array de mensagens
-    const indiceAleatorio = Math.floor(Math.random() * mensagens.length);
-  
-    // Atualize o valor da variável mensg[0].content com a mensagem aleatória
-    mensg[0].content = mensagens[indiceAleatorio]+" que vive em um universo que palavrões são obrigatórios";
+.input:focus{
+    outline: none;
+}
+
+.material-symbols-outlined {
+    position: relative;
+    padding: 12px 12px;
+    border-radius: 50%;
+    background-color: #DD203C;
+    border: none;
+    color: white;
+    font-variation-settings:
+        'FILL' 1,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24;
   }
-CapturarFala();
+  
+  .material-symbols-outlined::before {
+    content: "\f130"; /* Código do ícone de microfone (pode variar dependendo da fonte) */
+    font-family: 'Font Awesome'; /* Use a fonte que contém o ícone */
+    font-size: 16px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+
+  }
+  
+  .material-symbols-outlined:hover {
+    background-color: #891425;
+  }
+  
+  .material-symbols-outlined:hover::before {
+    display: block; /* Exibe o ícone ao passar o mouse */
+  }
+  
+.logo{
+    padding-top: 20px;
+}
+.barra{
+    
+    width: 60px;
+    background-color: #DD203C;
+    height: 100vh;
+    position: absolute;
+    left: 0;
+}
+
+.light-mode {
+    background-color: #fff;
+    color: #000;
+}
+
+.dark-mode {
+    background-color: #000;
+    color: #fff;
+}
+
+@keyframes changeHue {
+    0% {
+        filter: hue-rotate(0deg); /* Começa com o matiz original (0 graus) */
+    }
+    100% {
+        filter: hue-rotate(360deg); /* Gira o matiz em 360 graus para criar a animação completa */
+    }
+}
+#toggleMode{
+    position: absolute;
+    z-index: 999;
+    font-size: 40px;
+    background-color: transparent;
+    border: none;
+}
+.dark-mode {
+    background-color: #272727;
+    color: #fff;
+  }
+  
+  .dark-mode .barra {
+    background-color: #660202; /* Cor da barra lateral no modo escuro */
+  }
+
+  .dark-mode .input {
+    border-bottom: 1px solid white;
+    color: white;
+  }
+
+  .dark-mode h1 {
+    color: #fff; /* Cor do texto h1 no modo escuro */
+  }
+  .dark-mode .material-symbols-outlined:hover{
+    background-color: #660202;
+}
+  .dark-mode .material-symbols-outlined{
+    background-color: #660202;
+}
+  
+
+  
